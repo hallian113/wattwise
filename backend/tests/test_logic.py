@@ -42,16 +42,34 @@ def test_split_and_cost():
     assert tf.cost(peak, off, t) == pytest.approx(0.1 * 46.85 + 0.3 * 40.53)
 
 
+def hour(h_utc, wh, seconds=3600.0):
+    return (datetime(2026, 11, 5, h_utc, tzinfo=timezone.utc), wh, seconds)
+
+
 def test_summary_shares_and_intensity():
     t = tf.DEFAULT_TARIFF
-    rows = [(datetime(2026, 11, 5, 14, tzinfo=timezone.utc), 100.0),   # 19:00 local, peak
-            (datetime(2026, 11, 5, 5, tzinfo=timezone.utc), 100.0)]    # 10:00 local, off-peak
-    as_of = datetime(2026, 11, 5, 20, 0, tzinfo=TZ)                    # 2 of 4 peak hours passed
-    s = analytics.summarize(rows, TZ, t, as_of)
-    assert s["total_units"] == pytest.approx(0.2)
-    assert s["peak_share"] == pytest.approx(0.5)
-    # peak: 100 Wh in 2 h = 50 Wh/h; day: 200 Wh in 20 h = 10 Wh/h  -> 5x
-    assert s["peak_vs_average"] == pytest.approx(5.0)
+    # 13:00 and 14:00 UTC are 18:00 and 19:00 local: peak. 5:00 and 6:00 UTC are 10:00 and 11:00 local: off-peak.
+    rows = [hour(13, 100), hour(14, 100), hour(5, 20), hour(6, 20)]
+    s = analytics.summarize(rows, TZ, t, datetime(2026, 11, 5, 20, 0, tzinfo=TZ))
+    assert s["total_units"] == pytest.approx(0.24)
+    assert s["peak_share"] == pytest.approx(200 / 240)
+    # peak: 200 Wh in 7200 s = 100 W. All measured time: 240 Wh in 14400 s = 60 W.
+    assert s["peak_vs_average"] == pytest.approx(100 / 60)
+
+
+def test_intensity_is_left_out_when_there_is_no_off_peak_data():
+    t = tf.DEFAULT_TARIFF
+    s = analytics.summarize([hour(13, 100)], TZ, t, datetime(2026, 11, 5, 19, 0, tzinfo=TZ))
+    assert s["peak_share"] == pytest.approx(1.0)
+    assert s["peak_vs_average"] is None
+
+
+def test_a_gap_with_no_readings_cannot_inflate_the_intensity():
+    t = tf.DEFAULT_TARIFF
+    # 10 minutes of data at 14:50, and 10 minutes at 18:30. The hours in between had no readings.
+    rows = [(datetime(2026, 11, 5, 9, tzinfo=timezone.utc), 8.0, 600.0), (datetime(2026, 11, 5, 13, tzinfo=timezone.utc), 8.0, 600.0)]
+    s = analytics.summarize(rows, TZ, t, datetime(2026, 11, 5, 18, 40, tzinfo=TZ))
+    assert s["peak_vs_average"] is None
 
 
 def test_projection_matches_hand_calculation():

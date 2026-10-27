@@ -12,4 +12,15 @@ MQTT_HOST = os.getenv("MQTT_HOST", "localhost")
 MQTT_PORT = int(os.getenv("MQTT_PORT", "1883"))
 LOCAL_TZ = os.getenv("LOCAL_TZ", "Asia/Karachi")
 SCHEMA_PATH = BASE / "schema.sql"
-FRONTEND_DIR = BASE.parent / "frontend"
+
+
+def _find_frontend() -> Path:
+    """The folder that holds dashboard.html: 'frontend' or 'dashboard', next to the backend folder."""
+    for name in ("frontend", "dashboard"):
+        folder = BASE.parent / name
+        if (folder / "dashboard.html").exists():
+            return folder
+    return BASE.parent / "frontend"
+
+
+FRONTEND_DIR = _find_frontend()

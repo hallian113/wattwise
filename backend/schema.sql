@@ -59,8 +59,11 @@ CREATE TABLE IF NOT EXISTS energy_hourly (
     socket     TEXT NOT NULL,
     source     TEXT NOT NULL,
     wh         DOUBLE PRECISION NOT NULL DEFAULT 0,
+    seconds    DOUBLE PRECISION NOT NULL DEFAULT 0,   -- how many seconds of data went into this hour
     PRIMARY KEY (hour_start, socket, source)
 );
+-- Databases made with the first version get the new column here.
+ALTER TABLE energy_hourly ADD COLUMN IF NOT EXISTS seconds DOUBLE PRECISION NOT NULL DEFAULT 0;
 
 -- "Units since start": one active session per socket and source.
 CREATE TABLE IF NOT EXISTS sessions (

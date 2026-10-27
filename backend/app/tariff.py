@@ -31,9 +31,10 @@ def is_peak(local_dt: datetime, tariff: dict) -> bool:
 
 
 def split_hourly(rows, tz, tariff: dict) -> tuple[float, float]:
-    """rows: iterable of (hour_start as aware datetime, wh). Returns (peak_wh, offpeak_wh)."""
+    """rows: iterable of (hour_start as aware datetime, wh, ...). Returns (peak_wh, offpeak_wh)."""
     peak = off = 0.0
-    for hour_start, wh in rows:
+    for row in rows:
+        hour_start, wh = row[0], row[1]
         local = hour_start.astimezone(tz)
         if is_peak(local, tariff):
             peak += wh

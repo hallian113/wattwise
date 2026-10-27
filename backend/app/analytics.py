@@ -16,15 +16,21 @@ def trapezoid_wh(p_prev: float, p_cur: float, dt_s: float, max_gap_s: float):
 
 
 def summarize(hourly_rows, tz, tariff: dict, as_of_local: datetime) -> dict:
-    """Totals for one day from hourly energy rows [(hour_start, wh), ...]."""
-    rows = list(hourly_rows)
-    total = sum(wh for _, wh in rows)
+    """Totals for one day from hourly rows [(hour_start, wh, seconds_of_data), ...].
+
+    peak_vs_average compares the average power during the peak with the average
+    power over all the time that was actually measured (seconds_of_data), so a
+    gap with no readings cannot distort it. It is left out unless the data
+    holds at least 30 minutes of peak AND at least 1 hour outside the peak.
+    """
+    rows = [(r[0], r[1], r[2] if len(r) > 2 else 0.0) for r in hourly_rows]
+    total = sum(r[1] for r in rows)
     peak, off = tf.split_hourly(rows, tz, tariff)
-    ph = tf.peak_hours_elapsed(as_of_local, tariff)
-    hours_so_far = max(as_of_local.hour + as_of_local.minute / 60, 1e-9)
+    peak_s = sum(sec for h, _, sec in rows if tf.is_peak(h.astimezone(tz), tariff))
+    total_s = sum(sec for _, _, sec in rows)
     intensity = None
-    if ph >= 0.5 and total > 0:
-        intensity = (peak / ph) / (total / hours_so_far)
+    if peak > 0 and total > 0 and peak_s >= 1800 and (total_s - peak_s) >= 3600:
+        intensity = (peak / peak_s) / (total / total_s)
     return {
         "total_units": total / 1000.0,
         "peak_units": peak / 1000.0,

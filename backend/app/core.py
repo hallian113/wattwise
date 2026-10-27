@@ -124,7 +124,7 @@ class Core:
                     wh = analytics.trapezoid_wh(prev[1], w, (ts - prev[0]).total_seconds(), th["max_gap_s"])
                     if wh is not None:
                         middle = prev[0] + (ts - prev[0]) / 2     # the hour the interval mostly belongs to
-                        self.store.add_energy(hour_start(middle), socket, source, wh)
+                        self.store.add_energy(hour_start(middle), socket, source, wh, (ts - prev[0]).total_seconds())
                         self.store.add_session_wh(socket, source, ts, wh)
                     wall_dt = (wall - prev[2]).total_seconds()
                     if wall_dt > 0.05:
@@ -210,7 +210,7 @@ class Core:
             app = apps.get(row["socket"], {"name": f"Socket {row['socket']}", "kind": "other", "room": "Room 1", "measured": True, "rated_w": None})
             tr = self.trackers.get((source, row["socket"]))
             sess = self.store.get_session(row["socket"], source)
-            today = sum(wh for _, wh in self.store.hourly(source, d0, d1, row["socket"]))
+            today = sum(r[1] for r in self.store.hourly(source, d0, d1, row["socket"]))
             sockets.append({
                 "socket": row["socket"], "appliance": app["name"], "kind": app["kind"], "room": app["room"],
                 "label": "measured" if app["measured"] else "estimate",
@@ -312,7 +312,7 @@ class Core:
             cstart = local.date().replace(day=1)
         c0 = datetime(cstart.year, cstart.month, cstart.day, tzinfo=self.tz)
         cycle_rows = self.store.hourly(source, c0.astimezone(UTC), tf.next_day(local).astimezone(UTC))
-        measured_cycle = sum(wh for _, wh in cycle_rows) / 1000.0
+        measured_cycle = sum(r[1] for r in cycle_rows) / 1000.0
         days_elapsed = max(0.0, (local - c0).total_seconds() / 86400)
         projection = analytics.project_cycle(measured_cycle, days_elapsed, bill)
         projection["cycle_start_date"] = cstart.isoformat()

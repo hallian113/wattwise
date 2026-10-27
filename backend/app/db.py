@@ -76,10 +76,11 @@ class Store:
             (ts, source, device_id, room, seq, presence, lux, temp_c, humidity, door_open), one=True)
         return row is not None
 
-    def add_energy(self, hour_start: datetime, socket: str, source: str, wh: float):
-        self._q("INSERT INTO energy_hourly (hour_start, socket, source, wh) VALUES (%s,%s,%s,%s) "
-                "ON CONFLICT (hour_start, socket, source) DO UPDATE SET wh = energy_hourly.wh + EXCLUDED.wh",
-                (hour_start, socket, source, wh))
+    def add_energy(self, hour_start: datetime, socket: str, source: str, wh: float, seconds: float = 0.0):
+        self._q("INSERT INTO energy_hourly (hour_start, socket, source, wh, seconds) VALUES (%s,%s,%s,%s,%s) "
+                "ON CONFLICT (hour_start, socket, source) DO UPDATE "
+                "SET wh = energy_hourly.wh + EXCLUDED.wh, seconds = energy_hourly.seconds + EXCLUDED.seconds",
+                (hour_start, socket, source, wh, seconds))
 
     def add_session_wh(self, socket: str, source: str, ts: datetime, wh: float):
         self._q("INSERT INTO sessions (socket, source, started_at, wh) VALUES (%s,%s,%s,0) "
@@ -137,13 +138,14 @@ class Store:
         return list(reversed(rows))
 
     def hourly(self, source: str, start: datetime, end: datetime, socket: str | None = None):
+        """[(hour_start, wh, seconds_of_data)]. For all sockets the energy is added and the seconds are the longest."""
         if socket:
-            rows = self._q("SELECT hour_start, wh FROM energy_hourly WHERE source = %s AND socket = %s "
+            rows = self._q("SELECT hour_start, wh, seconds FROM energy_hourly WHERE source = %s AND socket = %s "
                            "AND hour_start >= %s AND hour_start < %s ORDER BY hour_start", (source, socket, start, end))
         else:
-            rows = self._q("SELECT hour_start, sum(wh) AS wh FROM energy_hourly WHERE source = %s "
+            rows = self._q("SELECT hour_start, sum(wh) AS wh, max(seconds) AS seconds FROM energy_hourly WHERE source = %s "
                            "AND hour_start >= %s AND hour_start < %s GROUP BY hour_start ORDER BY hour_start", (source, start, end))
-        return [(r["hour_start"], float(r["wh"])) for r in rows]
+        return [(r["hour_start"], float(r["wh"]), float(r["seconds"])) for r in rows]
 
     def meter_counter_delta(self, socket: str, source: str, since: datetime):
         """Change of the meter's own energy counter since `since` (for the accuracy check)."""
