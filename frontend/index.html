@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WattWise — Intelligence for a smarter, energy-efficient home</title>
+<meta name="description" content="AI + IoT powered home energy management: monitor, analyze and optimize electricity use in PKR.">
+<link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/landing.css"></head>
+<body class="landing">
+<header class="l-head"><div class="in">
+  <a class="l-brand" href="#home"><span class="logo" id="lg"></span>WattWise</a>
+  <nav class="l-nav" aria-label="Sections"><a href="#home" class="on">Home</a><a href="#features">Features</a><a href="#how">How It Works</a><a href="#about">About</a></nav>
+  <a class="btn l-cta" href="dashboard.html">Explore WattWise <span class="ar"></span></a></div></header>
+<main>
+<section class="hero" id="home"><div class="hero-in">
+  <div><div class="eyebrow">AI + IoT Powered Energy Management</div>
+    <h1 class="wordmark">Watt<span>Wise</span></h1>
+    <h2>Intelligence for a smarter,<br>energy-efficient home.</h2>
+    <p class="lead">Monitor, analyze, and optimize your electricity usage with intelligent IoT and AI-powered energy management.</p>
+    <a class="btn" href="dashboard.html">Explore WattWise <span class="ar"></span></a></div>
+  <div class="stage" id="stage"><div id="house"></div>
+    <div class="callout c1" data-i="chart-column">Monitor Usage (IoT)</div><div class="callout c2" data-i="brain">AI Insights</div><div class="callout c3" data-i="wifi">IoT Sensors</div>
+    <div class="callout c4" data-i="leaf">Save Energy</div><div class="callout c5" data-i="lightbulb">Control Appliances</div>
+    <div class="hint"><span id="hintTxt">Drag to rotate the house</span><button id="spin" aria-pressed="true">Auto-rotate: on</button></div></div></div>
+  <div class="strip" role="list"><div role="listitem" data-i="chart-column">Real-Time<br>Monitoring</div><div role="listitem" data-i="layers">AI-Powered<br>Optimization</div><div role="listitem" data-i="cpu">IoT<br>Integration</div><div role="listitem" data-i="settings">Smart<br>Automation</div><div role="listitem" data-i="leaf">Lower<br>Electricity Costs</div><div role="listitem" data-i="shield-check">Sustainable<br>Living</div></div>
+  <div class="wave"></div></section>
+
+<section class="sec" id="features"><div class="in"><h2 class="t">Everything your home’s energy needs</h2><p class="s">One platform that senses, understands, decides, acts and measures — in kilowatt-hours and Pakistani Rupees.</p>
+  <div class="fgrid">
+   <div class="fcard"><span class="hicon" data-i="zap"></span><h3>Real-time monitoring</h3><p>PZEM-004T meters report power and energy per room and appliance; ESP32 nodes stream them over MQTT.</p></div>
+   <div class="fcard"><span class="hicon" data-i="person-standing"></span><h3>Occupancy &amp; context</h3><p>LD2410 mmWave, PIR, light, temperature and door sensors tell WattWise whether a room is occupied, vacant or uncertain.</p></div>
+   <div class="fcard"><span class="hicon" data-i="receipt"></span><h3>Tariff-aware analytics</h3><p>Configurable slabs, protected/unprotected category, peak hours and a month-end bill estimate with 150 / 180 / 190 / 200-unit alerts.</p></div>
+   <div class="fcard"><span class="hicon" data-i="brain"></span><h3>AI &amp; Random Forest</h3><p>Explainable rules first; Random Forest forecasts of load and occupancy on top — labelled honestly until trained on real data.</p></div>
+   <div class="fcard"><span class="hicon" data-i="layers"></span><h3>Smart automation</h3><p>Occupancy lighting, smart fan, energy-saving mode and weather safety — manual override always wins.</p></div>
+   <div class="fcard"><span class="hicon" data-i="leaf"></span><h3>Waste detection</h3><p>Finds lights, fans, TVs and chargers left running in vacant rooms and shows the rupee impact.</p></div>
+   <div class="fcard"><span class="hicon" data-i="cloud-lightning"></span><h3>Weather-aware safety</h3><p>Weather advisories and voltage deviation raise a precaution status with an occupancy-aware policy. An aid only: it never replaces breakers or surge protection.</p></div>
+   <div class="fcard"><span class="hicon" data-i="git-compare"></span><h3>What-if planning</h3><p>Try usage changes and peak-hour shifts and compare labelled estimates of energy and rupee cost side by side.</p></div>
+   <div class="fcard"><span class="hicon" data-i="sprout"></span><h3>Sustainability readiness</h3><p>Efficiency indicators, CO₂e estimates and a net-zero readiness checklist. Solar and storage are prepared for, not claimed.</p></div></div></div></section>
+
+<section class="sec alt" id="how"><div class="in"><h2 class="t">How it works</h2><p class="s">A continuous loop that turns raw readings into decisions you can see and override.</p>
+  <div class="steps"><div class="step"><b class="n">1</b><h3>Sense</h3><p>ESP32 nodes in each room read presence, climate, light, door state and energy.</p></div>
+   <div class="step"><b class="n">2</b><h3>Understand</h3><p>The backend combines readings with time, tariff and history to classify each room and appliance.</p></div>
+   <div class="step"><b class="n">3</b><h3>Decide</h3><p>Explainable rules judge if each load is needed; ML forecasts supply predictions.</p></div>
+   <div class="step"><b class="n">4</b><h3>Act</h3><p>Recommend or switch supported appliances through relays, infrared or a contactor.</p></div>
+   <div class="step"><b class="n">5</b><h3>Measure</h3><p>Energy, cost, peak share and projected units are shown on the dashboard.</p></div></div></div></section>
+
+<section class="sec" id="about"><div class="in"><h2 class="t">About WattWise</h2><p class="s">AI-Driven Context-Aware Energy Optimization and Intelligent Management System — a Final Year Project at COMSATS University Islamabad, Abbottabad Campus.</p>
+  <div class="about"><div class="card"><h3>Prototype scope</h3><ul><li>Three rooms: <b>Lounge, Bedroom, Bathroom</b></li><li>ESP32-S3 gateway + ESP32-C3 room nodes over MQTT</li><li>PZEM-004T, LD2410, PIR, BME280, BH1750, reed switch, relays</li><li>FastAPI · PostgreSQL · Scikit-learn (Random Forest)</li><li><b>Demo Mode</b> for presentations, <b>Live Mode</b> for real hardware — never mixed</li></ul></div>
+  <div class="card"><h3>Project team</h3><p style="margin:6px 0 0">Sawera (FA23-BSE-106)<br>Talha (FA23-BSE-118)<br><span class="muted">Supervisor: Humaira Jabeen, Lecturer</span></p><p class="small muted" style="margin-top:14px">Bills and savings are shown as estimates. No saving figure is claimed in advance; it is measured against a baseline.</p></div></div></div></section>
+</main>
+<footer class="l-foot">© WattWise · COMSATS University Islamabad, Abbottabad Campus · Final Year Project FYP-26F-0161</footer>
+<script src="vendor/three.min.js"></script><script src="js/icons.js"></script><script src="js/core.js"></script><script src="js/house3d.js"></script>
+<script>
+document.getElementById("lg").innerHTML = WW.icon("zap", 22);
+document.querySelectorAll(".ar").forEach(e => e.innerHTML = WW.icon("arrow-right", 18));
+document.querySelectorAll("[data-i]").forEach(e => e.insertAdjacentHTML("afterbegin", WW.icon(e.dataset.i, e.classList.contains("hicon") ? 24 : 24)));
+document.querySelectorAll(".strip div").forEach(e => { const s = e.querySelector("svg"); if (s) { s.setAttribute("width", 30); s.setAttribute("height", 30); } });
+const h = WattHouse.init(document.getElementById("house"));
+const b = document.getElementById("spin");
+if (h) b.onclick = () => { h.autoRotate = !h.autoRotate; b.textContent = "Auto-rotate: " + (h.autoRotate ? "on" : "off"); b.setAttribute("aria-pressed", h.autoRotate); }; else document.querySelector(".hint").style.display = "none";
+// nav: smooth scroll + active link
+const links = [...document.querySelectorAll(".l-nav a")];
+addEventListener("scroll", () => { let cur = "home"; ["home","features","how","about"].forEach(id => { if (document.getElementById(id).getBoundingClientRect().top < 160) cur = id; }); links.forEach(a => a.classList.toggle("on", a.getAttribute("href") === "#" + cur)); }, { passive: true });
+</script></body></html>

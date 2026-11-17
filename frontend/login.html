@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>WattWise — Sign in</title><link rel="stylesheet" href="css/app.css"><link rel="stylesheet" href="css/modules.css"></head>
+<body data-page="login">
+<main class="login-wrap"><section class="card login-card" aria-labelledby="lt">
+  <a class="brand" href="index.html" title="WattWise home"><span class="logo" id="logo"></span><b>WattWise</b></a>
+  <h1 id="lt" style="font-size:22px;text-align:center">Sign in</h1>
+  <p class="small" style="text-align:center;margin:0">Needed only when the backend runs with authentication enabled. Demo mode needs no account.</p>
+  <div id="msg" role="alert"></div>
+  <div class="field"><label for="em">Email</label><input class="input" id="em" type="email" autocomplete="username" required></div>
+  <div class="field"><label for="pw">Password</label><input class="input" id="pw" type="password" autocomplete="current-password" required></div>
+  <button class="btn" id="go" style="justify-content:center">Sign in</button>
+  <button class="btn ghost" id="reg" style="justify-content:center">Create account</button>
+  <a class="small" href="dashboard.html" style="text-align:center">Continue in Demo mode →</a>
+</section></main>
+<script src="env.js"></script><script src="js/config.js"></script><script src="js/icons.js"></script><script src="js/core.js"></script><script src="js/utils/validators.js"></script>
+<script src="js/api/endpoints.js"></script><script src="js/api/api-client.js"></script><script src="js/api/api-services.js"></script><script src="js/api/mock-adapter.js"></script>
+<script src="js/pages/login.js"></script></body></html>
